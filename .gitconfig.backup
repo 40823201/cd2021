@@ -1,0 +1,6 @@
+[merge]
+	tool = kdiff3
+[diff]
+	guitool = kdiff3
+[core]
+	editor = \"F:/kmol2021_spring_v1/data/GitExtensions/GitExtensions.exe\" fileeditor

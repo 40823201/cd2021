@@ -410,6 +410,7 @@
 <h3>RemoteApi影片</h3>
 <p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/l2X4pYOdFVU" width="560"></iframe></p>
 <h2>W16</h2>
+<p>所有檔案皆可在download中下載</p>
 <p>1.利用<a href="https://www.onshape.com/en/">Onshape</a>繪製MTB_Robot的零組件</p>
 <p><a href="https://cad.onshape.com/documents/9676af857d2cf1d178cbd8ae/w/d8eff606619e9206d4832ada/e/bf5df41a02481b7e8f1366c2">零件繪製</a> / <a href="https://drive.google.com/file/d/1O6X4sXT07RRwIYdOxqseCYb6DhKmB3sq/view?usp=sharing">零件下載</a></p>
 <p><strong><img alt="" height="200" src="/images/Onshape.png" width="356"/></strong></p>
@@ -423,14 +424,120 @@
 <p>3.逆向運動學函式</p>
 <p><a href="https://drive.google.com/file/d/1W81R5pWubQFn3S0xQ2CSLsidh6nBWUxO/view?usp=sharing">迴圈檔案下載</a></p>
 <p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/Q--caFASg9o" width="560"></iframe></p>
-<p></p>
-<p>鍵盤程式下載(W16-4.ttt)</p>
+<pre class="brush:py;auto-links:false;toolbar:false;tab-size:3" contenteditable="false">function moving(x,y)
+   a=0.4
+   b=0.4
+   c=math.pow((math.pow(x,2)+math.pow(y,2)),0.5)
+   s=(a+b+c)/2
+   area=math.pow((s*(s-a)*(s-b)*(s-c)),0.5)
+   h=area/(2*c)
+   deg1_base=math.atan(x/y)
+   if x&lt;0 and y&lt;0 then
+       deg1_base=deg1_base+math.pi
+   end
+   deg1_tri=math.asin(h/a)
+   deg1=deg1_base+deg1_tri
+   deg2=math.pi-(0.5*math.pi-deg1_tri)-math.acos(h/b)
+   deg3=deg2-deg1
+   sim.setJointTargetPosition(joint01,deg1)
+   sim.setJointTargetPosition(joint02,-deg2)
+   sim.setJointTargetPosition(joint03,deg3)
+end
+
+
+function sysCall_threadmain()
+    joint01=sim.getObjectHandle('joint1')
+    joint02=sim.getObjectHandle('joint2')
+    joint03=sim.getObjectHandle('joint3')
+    jointz=sim.getObjectHandle('jointz')
+    sim.setJointTargetPosition(joint01,0)
+    sim.setJointTargetPosition(joint02,0)
+    sim.setJointTargetPosition(joint03,0)
+    sim.setJointTargetPosition(jointz,0)
+    sim.setIntegerSignal("pad_switch",1)
+    sim.setJointTargetPosition(jointz,-0.044)
+    sim.wait(3)
+    sim.setJointTargetPosition(jointz,0)
+    while sim.getSimulationState()~=sim.simulation_advancing_adouttostopre do
+        moving(0.2,0.7)
+        sim.wait(3)
+        sim.setIntegerSignal("pad_switch",0)
+        sim.wait(3)
+        sim.setIntegerSignal("pad_switch",1)
+        sim.setJointTargetPosition(jointz,-0.044)
+        sim.wait(3)
+        sim.setJointTargetPosition(jointz,0)
+        sim.wait(3)
+        moving(-0.3,-0.55)
+        sim.wait(3)
+        sim.setIntegerSignal("pad_switch",0)
+        sim.wait(3)
+        sim.setIntegerSignal("pad_switch",1)
+        sim.setJointTargetPosition(jointz,-0.044)
+        sim.wait(3)
+        sim.setJointTargetPosition(jointz,0)
+        sim.wait(3)
+    end
+end</pre>
+<p><a href="https://drive.google.com/file/d/18IWSpy3IGhrR1bhs5Ps8bzOg1fnfIBFa/view?usp=sharing">鍵盤檔案下載</a></p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/uKkN4u1Mo6E" width="560"></iframe></p>
+<pre class="brush:py;auto-links:false;toolbar:false;tab-size:3" contenteditable="false">function sysCall_init()
+    joint01=sim.getObjectHandle('joint1')
+    joint02=sim.getObjectHandle('joint2')
+    joint03=sim.getObjectHandle('joint3')
+    jointz=sim.getObjectHandle('jointz')
+    sim.setJointTargetPosition(joint01,0)
+    sim.setJointTargetPosition(joint02,0)
+    sim.setJointTargetPosition(joint03,0)
+    sim.setJointTargetPosition(jointz,0)
+    deg1=0
+    deg2=0
+    zhing=false
+    pad=false
+end
+ 
+function sysCall_actuation()
+     message,auxiliaryData=sim.getSimulatorMessage()
+    while message~=-1 do
+        if (message==sim.message_keypress) then
+            if (auxiliaryData[1]==119) then
+            deg1=deg1+1
+            sim.setJointTargetPosition(joint01,deg1*math.pi/180)
+            end
+            if (auxiliaryData[1]==115) then
+            deg1=deg1-1
+            sim.setJointTargetPosition(joint01,deg1*math.pi/180)
+            end
+            if (auxiliaryData[1]==97) then
+            deg2=deg2+1
+            sim.setJointTargetPosition(joint02,deg2*math.pi/180)
+            end
+            if (auxiliaryData[1]==100) then
+            deg2=deg2-1
+            sim.setJointTargetPosition(joint02,deg2*math.pi/180)
+            end
+            if (auxiliaryData[1]==2008) then
+                sim.setJointTargetPosition(jointz,-0.55)
+                sim.setIntegerSignal("pad_switch",1)
+            end
+            if (auxiliaryData[1]==2007) then
+                sim.setJointTargetPosition(jointz,0)
+                sim.setIntegerSignal("pad_switch",1)
+            end
+            if (auxiliaryData[1]==32) then
+                sim.setIntegerSignal("pad_switch",0)
+            end
+            sim.setJointTargetPosition(joint03,(deg2-deg1)*math.pi/180)
+        end
+    message,auxiliaryData=sim.getSimulatorMessage()
+    end
+end</pre>
 <p>-------------------------------------------------------------------------------------------------------</p>
 <p>4.利用RemoteApi控制機械手臂</p>
 <p><a href="https://drive.google.com/drive/folders/1dcUM1dAiKycXAgU8EY24sdY0zlUUQFZw?usp=sharing">RemoteApi下載</a></p>
 <p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/I92zSFULlAo" width="560"></iframe></p>
 <p></p>
-<pre class="brush:py;auto-links:false;toolbar:false" contenteditable="false">import sim as vrep
+<pre class="brush:py;auto-links:false;toolbar:false;tab-size:3" contenteditable="false">import sim as vrep
 import math
 import random
 import time

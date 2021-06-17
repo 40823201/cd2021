@@ -370,6 +370,7 @@
 <p><img caption="false" height="274" src="https://40823217.github.io/stage3-bg2/images/%E9%96%8B%E9%97%9C%E9%96%80GIF.gif" width="560"/></p>
 <p></p><h3>task3-RoboDK</h3>
 <p>利用RemoteApi操控六軸機器人</p>
+<p>參考<a href="https://40823202.github.io/cd2021/content/W14.html">40823202</a></p>
 <p>操作者：40823201</p>
 <p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/dEXjIyq2fKY" width="560"></iframe></p>
 <p><img alt="" height="250" src="https://40823201.github.io/stage3-bg2/images/0527.gif" width="561"/></p>
@@ -406,8 +407,7 @@
 <p><span>將右方欄位的藍色路徑複製，並在RoboDK中貼上(綠色線框選處)-&gt;確定</span></p>
 <p><img alt="" height="250" src="https://40823201.github.io/stage3-bg2/images/052716.png" width="444"/></p>
 <p>左側上方的Pick and Place點擊左鍵-&gt;編輯Python程序 即可作動</p>
-<p><img alt="" height="250" src="https://40823201.github.io/stage3-bg2/images/052717.png" width="444"/></p>
-<h3>RemoteApi影片</h3>
+<p><img alt="" height="250" src="https://40823201.github.io/stage3-bg2/images/052717.png" width="444"/></p><h3>RemoteApi影片</h3>
 <p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/l2X4pYOdFVU" width="560"></iframe></p>
 <h2>W16</h2>
 <p>所有檔案皆可在<a href="https://github.com/40823201/cd2021/tree/main/W16">W16</a>中下載</p>
@@ -447,34 +447,34 @@ end
 
 
 function sysCall_threadmain()
-    joint01=sim.getObjectHandle('joint1')
+    joint01=sim.getObjectHandle('joint1')   //定義軸的名稱
     joint02=sim.getObjectHandle('joint2')
     joint03=sim.getObjectHandle('joint3')
     jointz=sim.getObjectHandle('jointz')
-    sim.setJointTargetPosition(joint01,0)
+    sim.setJointTargetPosition(joint01,0)   //定義軸的初始位置
     sim.setJointTargetPosition(joint02,0)
     sim.setJointTargetPosition(joint03,0)
     sim.setJointTargetPosition(jointz,0)
-    sim.setIntegerSignal("pad_switch",1)
-    sim.setJointTargetPosition(jointz,-0.044)
-    sim.wait(3)
-    sim.setJointTargetPosition(jointz,0)
+    sim.setIntegerSignal("pad_switch",1)   //給吸盤高電位
+    sim.setJointTargetPosition(jointz,-0.04)   //移動至-0.4
+    sim.wait(3)   //等待3秒
+    sim.setJointTargetPosition(jointz,0)   //回到初始位置
     while sim.getSimulationState()~=sim.simulation_advancing_adouttostopre do
-        moving(0.2,0.7)
+        moving(0.2,0.7)   //移動至(0.2,0.7)
         sim.wait(3)
-        sim.setIntegerSignal("pad_switch",0)
+        sim.setIntegerSignal("pad_switch",0)   //給吸盤低電位
         sim.wait(3)
         sim.setIntegerSignal("pad_switch",1)
-        sim.setJointTargetPosition(jointz,-0.044)
+        sim.setJointTargetPosition(jointz,-0.04)
         sim.wait(3)
         sim.setJointTargetPosition(jointz,0)
         sim.wait(3)
-        moving(-0.3,-0.55)
+        moving(-0.3,-0.55)   //移動至(-0.3,-0.55)
         sim.wait(3)
         sim.setIntegerSignal("pad_switch",0)
         sim.wait(3)
         sim.setIntegerSignal("pad_switch",1)
-        sim.setJointTargetPosition(jointz,-0.044)
+        sim.setJointTargetPosition(jointz,-0.04)
         sim.wait(3)
         sim.setJointTargetPosition(jointz,0)
         sim.wait(3)
@@ -569,11 +569,11 @@ vrep.simxSetJointTargetPosition(clientID,jointz,0,opmode)</pre>
     joint02=sim.getObjectHandle('joint2')
     joint03=sim.getObjectHandle('joint3')
     jointz=sim.getObjectHandle('jointz')
-    sim.setJointTargetPosition(joint01,0)
+    sim.setJointTargetPosition(joint01,0)   //定義軸的名稱
     sim.setJointTargetPosition(joint02,0)
     sim.setJointTargetPosition(joint03,0)
     sim.setJointTargetPosition(jointz,0)
-    deg1=0
+    deg1=0   //定義初始角度為0
     deg2=0
     zhing=false
     pad=false
@@ -583,32 +583,32 @@ function sysCall_actuation()
      message,auxiliaryData=sim.getSimulatorMessage()
     while message~=-1 do
         if (message==sim.message_keypress) then
-            if (auxiliaryData[1]==119) then
+            if (auxiliaryData[1]==119) then   //W=119
             deg1=deg1+1
+            sim.setJointTargetPosition(joint01,deg1*math.pi/180)   //將角度換算成徑度
+            end
+            if (auxiliaryData[1]==115) then   //S=115
+            deg1=deg1-1   //角度縮小
             sim.setJointTargetPosition(joint01,deg1*math.pi/180)
             end
-            if (auxiliaryData[1]==115) then
-            deg1=deg1-1
-            sim.setJointTargetPosition(joint01,deg1*math.pi/180)
-            end
-            if (auxiliaryData[1]==97) then
-            deg2=deg2+1
+            if (auxiliaryData[1]==97) then   //A=97
+            deg2=deg2+1   //角度加大
             sim.setJointTargetPosition(joint02,deg2*math.pi/180)
             end
-            if (auxiliaryData[1]==100) then
+            if (auxiliaryData[1]==100) then   //D=100
             deg2=deg2-1
             sim.setJointTargetPosition(joint02,deg2*math.pi/180)
             end
-            if (auxiliaryData[1]==2008) then
-                sim.setJointTargetPosition(jointz,-0.55)
+            if (auxiliaryData[1]==2008) then   //方向鍵-下=2008
+                sim.setJointTargetPosition(jointz,-0.4)   //使吸盤至-0.4
+                sim.setIntegerSignal("pad_switch",1)   //給吸盤高電位
+            end
+            if (auxiliaryData[1]==2007) then   //方向鍵-上=2007
+                sim.setJointTargetPosition(jointz,0)   //使吸盤至0
                 sim.setIntegerSignal("pad_switch",1)
             end
-            if (auxiliaryData[1]==2007) then
-                sim.setJointTargetPosition(jointz,0)
-                sim.setIntegerSignal("pad_switch",1)
-            end
-            if (auxiliaryData[1]==32) then
-                sim.setIntegerSignal("pad_switch",0)
+            if (auxiliaryData[1]==32) then   //Tab=32
+                sim.setIntegerSignal("pad_switch",0)   //給吸盤低電位
             end
             sim.setJointTargetPosition(joint03,(deg2-deg1)*math.pi/180)
         end
@@ -658,14 +658,20 @@ end</pre>
 <p>輸入個人資料</p>
 <p><img alt="" height="200" src="/images/06155.png" width="356"/></p>
 <p>輸入學校資料後即完成註冊</p>
-<p><img alt="" height="200" src="/images/06156.png" width="356"/></p><h1>Problems&amp;Notes</h1><h3>404</h3>
+<p><img alt="" height="200" src="/images/06156.png" width="356"/></p><h1>Problems&amp;Notes</h1><h3>網頁404</h3>
 <p>將標題名稱改成大寫後 就解決了</p>
 <p><img alt="" height="200" src="/images/螢幕擷取畫面 (17).png" width="356"/></p>
-<p><img alt="" height="200" src="/images/螢幕擷取畫面 (18).png" width="356"/></p>
-<h2>無法Push</h2>
+<p><img alt="" height="200" src="/images/螢幕擷取畫面 (18).png" width="356"/></p><h2>無法Push</h2>
 <p><img caption="false" height="200" src="/images/螢幕擷取畫面 (30).png" width="355"/></p>
 <p>拉下最新版本後，需經過修改後再上傳即可。</p>
-<p>(在<a href="https://40823201.github.io/cd2021/content/W12-%E7%9B%B4%E6%92%AD.html">W12</a>有<a href="https://youtu.be/TL6bnUCd_ao">直播</a>說明)</p><h2>Site Title</h2>
-<p><iframe allowfullscreen="allowfullscreen" height="300" src="//www.youtube.com/embed/Xn-mBZ-l--o" width="560"></iframe></p><h1>w5</h1>
+<p>(在<a href="https://40823201.github.io/cd2021/content/W12-%E7%9B%B4%E6%92%AD.html">W12</a>有<a href="https://youtu.be/TL6bnUCd_ao">直播</a>說明)</p><h2>更改Site Title</h2>
+<p><iframe allowfullscreen="allowfullscreen" height="300" src="//www.youtube.com/embed/Xn-mBZ-l--o" width="560"></iframe></p>
+<h2>查看ip位置</h2>
+<p>打開cmd並在裡面打上ipconfig /all</p>
+<p><img caption="false" height="250" src="/images/06171.png" width="445"/></p>
+<p>確認自己是連接WIFI，就找到WIFI的欄位</p>
+<p><img alt="" height="250" src="/images/06172.png" width="444"/></p>
+<p>IPv4 Address即是ip位置</p>
+<p><img alt="" height="250" src="/images/06173.png" width="444"/></p><h1>w5</h1>
 <p><iframe height="700" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQABeMCt8FZ9-s6auaNKYMnfjh1WOgFJBg6edr6Ua62x-_t0CxUA4zpJNUcGwd2vjYFIKpCrTWeKJr6/pubhtml?gid=1379528053&amp;single=true&amp;widget=true&amp;headers=false" width="500"></iframe></p>
 <p>.</p>

@@ -437,12 +437,12 @@
    a=0.4
    b=0.4
    c=math.pow((math.pow(x,2)+math.pow(y,2)),0.5)
-   s=(a+b+c)/2
+   s=(a+b+c)/2   //海龍公式
    area=math.pow((s*(s-a)*(s-b)*(s-c)),0.5)
-   h=area/(2*c)
+   h=2*area/c
    deg1_base=math.atan(x/y)
    if x&lt;0 and y&lt;0 then
-       deg1_base=deg1_base+math.pi
+       deg1_base=deg1_base+math.pi   //使角度落於180-270之間
    end
    deg1_tri=math.asin(h/a)
    deg1=deg1_base+deg1_tri
@@ -625,7 +625,10 @@ function sysCall_actuation()
 end</pre>
 <p>-------------------------------------------------------------------------------------------------------</p>
 <p>心得：</p>
-<p>這次的期末作業讓我確實的接觸到了CoppeliaSim，因為在這之前，模擬的部分都不是我負責的，頂多使用RemoteApi操控作業，所以都不能了解<span>CoppeliaSim</span>的操作，不過經過這次，我也了解到為什麼大家都說用完<span>CoppeliaSim後發現英文的重要性，很感謝之前有認真學英文的我，在首次接觸到CoppeliaSim的情況下，沒什麼困難(還是有些沒看過的單詞，但是會去查)</span><span>，除了字太小以外...這學期首先要感謝的不外乎是老師的指導，也很感謝40823217(從Stage1到Stage3都跟我一組的組長)願意幫助我及指導我，以及40823210同學願意讓我把我高中的小願望當成主題，更精緻更完善的畫出來，還有感謝40823214同學的影片指導，讓我在程式方面較為熟悉。祝大家平平安安，去去疫情走！</span></p><h3>gogs及Fossil建立</h3>
+<p>這次的期末作業讓我確實的接觸到了CoppeliaSim，因為在這之前，模擬的部分都不是我負責的，頂多使用RemoteApi操控作業，所以都不能了解<span>CoppeliaSim</span>的操作，不過經過這次，我也了解到為什麼大家都說用完<span>CoppeliaSim後發現英文的重要性，很感謝之前有認真學英文的我，在首次接觸到CoppeliaSim的情況下，沒什麼困難(還是有些沒看過的單詞，但是會去查)</span><span>，除了字太小以外...這學期首先要感謝的不外乎是老師的指導，也很感謝40823217(從Stage1到Stage3都跟我一組的組長)願意幫助我及指導我，以及40823210同學願意讓我把我高中的小願望當成主題，更精緻更完善的畫出來，還有感謝40823214同學的影片指導，讓我在程式方面較為熟悉。祝大家平平安安，去去疫情走！</span></p>
+<h2><span>W17-報告</span></h2>
+<p><span><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/ELAwRupzQGE" width="560"></iframe></span></p>
+<p><span><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/_pnqc_TyqEk" width="560"></iframe></span></p><h3>gogs及Fossil建立</h3>
 <p>利用<a href="https://fossil.kmol.info:3443/">gogs</a>及fossilapp來解決Github帳號被flagged的問題。</p>
 <p><a href="https://fossil.kmol.info:3443/40823201/cd2021">個人fossil網頁</a></p>
 <p>先進到註冊頁面</p>
